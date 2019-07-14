@@ -1,10 +1,19 @@
 {
   "private": true,
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-sass": "3.0.0"
   },
   "dependencies": {
-    "laravel-elixir": "^5.0.0",
-    "bootstrap-sass": "^3.0.0"
+    "bootstrap-sass": "^3.4.1",
+    "laravel-elixir": "^6.0.0-18",
+    "node-gyp": "^5.0.2",
+    "node-sass": "^4.12.0"
+  },
+  "name": "your-app",
+  "version": "0.0.1",
+  "scripts": {
+    "gulp": "gulp",
+    "minify": "gulp minify"
   }
 }
