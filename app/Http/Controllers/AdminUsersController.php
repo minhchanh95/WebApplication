@@ -36,7 +36,7 @@ class AdminUsersController extends Controller
     {
         //
 
-        $role = Role::pluck('name', 'id')->all();
+        $role = Role::lists('name', 'id')->all();
 
         return view('admin.users.create', ['roles' => $role]);
     }
