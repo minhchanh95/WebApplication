@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Http\Requests\CategoriesCreateRequest;
-use App\Http\Requests\CategoriesEditRequest;
+use App\Comment;
+use App\CommentReply;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
-class AdminCategoriesController extends Controller
+class CommentRepliesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +19,6 @@ class AdminCategoriesController extends Controller
     public function index()
     {
         //
-        $categories = Category::all();
-
-        return view('admin.categories.index',['categories'=>$categories]);
     }
 
     /**
@@ -29,10 +26,10 @@ class AdminCategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-//    public function create()
-//    {
-//        //
-//    }
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,12 +37,9 @@ class AdminCategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoriesCreateRequest $request)
+    public function store(Request $request)
     {
         //
-        Category::create($request->all());
-
-        return redirect('/admin/categories');
     }
 
     /**
@@ -57,6 +51,12 @@ class AdminCategoriesController extends Controller
     public function show($id)
     {
         //
+        $comment = Comment::findOrFail($id);
+
+        $replies = $comment->replies;
+
+        return view('admin.comments.replies.show',['replies'=>$replies]);
+
     }
 
     /**
@@ -68,12 +68,6 @@ class AdminCategoriesController extends Controller
     public function edit($id)
     {
         //
-
-        $category = Category::findOrFail($id);
-
-        return view('admin.categories.edit',['category'=>$category]);
-
-
     }
 
     /**
@@ -83,14 +77,12 @@ class AdminCategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoriesEditRequest $request, $id)
+    public function update(Request $request, $id)
     {
         //
-        $category = Category::findOrFail($id);
+        CommentReply::findOrFail($id)->update($request->all());
 
-        $category->update($request->all());
-
-        return redirect('/admin/categories');
+        return redirect()->back();
     }
 
     /**
@@ -102,8 +94,33 @@ class AdminCategoriesController extends Controller
     public function destroy($id)
     {
         //
-        Category::findOrFail($id)->delete();
+        CommentReply::findOrFail($id)->delete();
 
-        return redirect('/admin/categories');
+        return redirect()->back();
+
+    }
+
+    public function createReply(Request $request){
+
+        $user = Auth::user();
+
+
+
+        $data = [
+
+            'comment_id'=> $request->comment_id,
+            'author'=> $user->name,
+            'email'=> $user->email,
+            'photo'=> $user->photo->file,
+            'body'=>$request->body
+
+        ];
+
+        CommentReply::create($data);
+
+        $request->session()->flash('reply_message', 'Your reply has been submitted and is waiting moderation');
+
+        return redirect()->back();
+
     }
 }

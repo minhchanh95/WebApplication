@@ -62,10 +62,10 @@
             {!! Form::close() !!}
 
             {{--<form method="post" action="/cms/public/posts">--}}
-            {!! Form::open(['method'=>'DELETE', 'action'=>['AdminPostsController@destroy',$post->id]]) !!}
+            {!! Form::open(['method'=>'DELETE', 'action'=>['AdminPostsController@destroy',$post->id],'onsubmit' => 'return ConfirmDelete()']) !!}
 
 
-            <div class="form-group">
+            <div class="form-group" >
                 {!! Form::submit('Delete Post', ['class'=>'btn btn-danger col-sm-2']) !!}
             </div>
 
@@ -82,7 +82,17 @@
         @include('includes.form_error')
 
     </div>
+    <script>
 
+        function ConfirmDelete()
+        {
+            var x = confirm("Are you sure you want to delete?");
+            if (x)
+                return true;
+            else
+                return false;
+        }
 
+    </script>
 
 @stop

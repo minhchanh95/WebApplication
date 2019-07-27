@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Requests\PostsCreateRequest;
+use App\Http\Requests\PostsEditRequest;
 use App\Photo;
 use App\Post;
 use Illuminate\Http\Request;
@@ -64,6 +65,10 @@ class AdminPostsController extends Controller
 
         }
 
+
+
+
+
         $user->posts()->create($input);
 
         return redirect('/admin/posts');
@@ -103,7 +108,7 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostsEditRequest $request, $id)
     {
         //
         $input = $request->all();
@@ -144,4 +149,16 @@ class AdminPostsController extends Controller
         return redirect('/admin/posts');
 
     }
+
+    public function post($slug){
+
+        $post = Post::findBySlugOrFail($slug);
+
+        $comments = $post->comments()->whereIsActive(1)->get();
+
+        return view('post',['post'=>$post,'comments'=>$comments]);
+        
+
+    }
+
 }

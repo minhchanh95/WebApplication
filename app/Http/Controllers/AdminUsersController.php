@@ -47,7 +47,7 @@ class AdminUsersController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsersRequest $request)
+    public function store(UsersEditRequest $request)
     {
         //
 //        User::create($request->all());

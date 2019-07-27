@@ -25,11 +25,11 @@ class UsersEditRequest extends Request
     {
         return [
             //
-            'name'=>'required',
-            'email'=>'required',
+            'name'=>'required|unique:users',
+            'email'=>'required|unique:users',
             'role_id'=>'required',
             'is_active'=>'required',
-
+            'password'=>'required',
         ];
     }
 }
