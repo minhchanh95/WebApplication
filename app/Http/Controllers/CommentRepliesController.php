@@ -19,6 +19,10 @@ class CommentRepliesController extends Controller
     public function index()
     {
         //
+        $replies = CommentReply::paginate(5);
+
+        return view('admin.comments.replies.show',['replies'=>$replies]);
+
     }
 
     /**
@@ -29,6 +33,7 @@ class CommentRepliesController extends Controller
     public function create()
     {
         //
+
     }
 
     /**
@@ -51,9 +56,12 @@ class CommentRepliesController extends Controller
     public function show($id)
     {
         //
+
         $comment = Comment::findOrFail($id);
 
         $replies = $comment->replies;
+
+        $replies = CommentReply::paginate(5);
 
         return view('admin.comments.replies.show',['replies'=>$replies]);
 
@@ -112,13 +120,14 @@ class CommentRepliesController extends Controller
             'author'=> $user->name,
             'email'=> $user->email,
             'photo'=> $user->photo->file,
-            'body'=>$request->body
+            'body'=>$request->body,
+            'is_active'=>$request->is_active
 
         ];
 
         CommentReply::create($data);
 
-        $request->session()->flash('reply_message', 'Your reply has been submitted and is waiting moderation');
+        $request->session()->flash('reply_message', 'Your reply has been submitted');
 
         return redirect()->back();
 

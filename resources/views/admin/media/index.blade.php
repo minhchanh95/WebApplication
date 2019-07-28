@@ -27,7 +27,7 @@
                     <td>
 
                         {{--<form method="post" action="/cms/public/posts">--}}
-                            {!! Form::open(['method'=>'DELETE', 'action'=>['AdminMediasController@destroy',$photo->id]]) !!}
+                            {!! Form::open(['method'=>'DELETE', 'action'=>['AdminMediasController@destroy',$photo->id],'onsubmit' => 'return ConfirmDelete()'])  !!}
 
                             <div class="form-group">
                                 {!! Form::submit('Delete', ['class'=>'btn btn-danger']) !!}
@@ -49,5 +49,23 @@
         </table>
 
     @endif
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-5">
 
+            {{$photos->render()}}
+
+        </div>
+    </div>
 @stop
+<script>
+
+    function ConfirmDelete()
+    {
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+    }
+
+</script>

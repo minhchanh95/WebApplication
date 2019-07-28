@@ -25,7 +25,7 @@
                     <td>{{$reply->author}}</td>
                     <td>{{$reply->email}}</td>
                     <td>{{$reply->body}}</td>
-                    <td><a href="{{route('home.posts', $reply->comment->post->id)}}">View Post</a></td>
+                    <td><a href="{{route('single.posts', $reply->comment->post->slug)}}">View Post</a></td>
 
                     <td>
 
@@ -68,7 +68,7 @@
                     <td>
 
                         {{--<form method="post" action="/cms/public/posts">--}}
-                        {!! Form::open(['method'=>'DELETE', 'action'=>['CommentRepliesController@destroy', $reply->id]]) !!}
+                        {!! Form::open(['method'=>'DELETE', 'action'=>['CommentRepliesController@destroy', $reply->id],'onsubmit' => 'return ConfirmDelete()'])!!}
 
 
 
@@ -89,7 +89,13 @@
 
             </tbody>
         </table>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-5">
 
+                {{$replies->render()}}
+
+            </div>
+        </div>
     @else
 
         <h1 class="text-center">No Replies</h1>
@@ -97,3 +103,14 @@
     @endif
 
 @stop
+<script>
+
+    function ConfirmDelete() {
+        var x = confirm("Are you sure you want to delete?");
+        if (x)
+            return true;
+        else
+            return false;
+    }
+
+</script>

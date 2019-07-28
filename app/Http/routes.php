@@ -12,8 +12,31 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
+
+Route::get('/about', function () {
+    return view('about');
+});
+
+Route::get('/service', function () {
+    return view('service');
+});
+
+Route::get('/contact', function () {
+    return view('contact');
+});
+
+
+
+Route::get('/registerUser', function () {
+    return view('registerUser');
+});
+
+Route::resource('/registerUser', 'RegistersController');
+
+Route::resource('/blog', 'PostsController');
+
 
 Route::auth();
 
@@ -21,6 +44,7 @@ Route::get('/home', 'HomeController@index');
 
 Route::get('/post/{id}',['as'=>'home.posts', 'uses' => 'AdminPostsController@post']);
 
+Route::get('/single/{id}',['as'=>'single.posts', 'uses' => 'PostsController@post']);
 
 Route::group(['middleware'=>'admin'], function (){
 
@@ -38,10 +62,12 @@ Route::group(['middleware'=>'admin'], function (){
 
     Route::resource('admin/media', 'AdminMediasController');
 
-    Route::resource('admin/comments', 'PostCommentsController');
 
-    Route::resource('admin/comments/replies', 'CommentRepliesController');
 });
+
+Route::resource('admin/comments/replies', 'CommentRepliesController');
+
+Route::resource('admin/comments', 'PostCommentsController');
 
 Route::group(['middleware'=>'auth'], function (){
 

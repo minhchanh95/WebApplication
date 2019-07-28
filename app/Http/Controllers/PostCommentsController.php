@@ -20,7 +20,7 @@ class PostCommentsController extends Controller
     public function index()
     {
         //
-        $comments = Comment::all();
+        $comments = Comment::paginate(5);
 
         return view('admin.comments.index', ['comments'=>$comments]);
     }
@@ -44,25 +44,32 @@ class PostCommentsController extends Controller
     public function store(Request $request)
     {
         //
-        $user = Auth::user();
+        if($user = Auth::user()){
+
+            $data = [
+
+                'post_id'=> $request->post_id,
+                'author'=> $user->name,
+                'email'=> $user->email,
+                'photo'=> $user->photo->file,
+                'body'=>$request->body,
+                'is_active'=>$request->is_active
+
+            ];
+
+            Comment::create($data);
+
+            $request->session()->flash('comment_message', 'Your message has been submitted');
+
+            return redirect()->back();
+        }else{
+            $request->session()->flash('comment_message', 'You must be login before comment');
+            return redirect('/login');
+        }
 
 
 
-        $data = [
 
-            'post_id'=> $request->post_id,
-            'author'=> $user->name,
-            'email'=> $user->email,
-            'photo'=> $user->photo->file,
-            'body'=>$request->body
-
-        ];
-
-        Comment::create($data);
-
-        $request->session()->flash('comment_message', 'Your message has been submitted and is waiting moderation');
-
-        return redirect()->back();
     }
 
     /**
@@ -122,5 +129,16 @@ class PostCommentsController extends Controller
         Comment::findOrFail($id)->delete();
 
         return redirect()->back();
+    }
+
+    public function post($slug){
+
+        $post = Post::findBySlugOrFail($slug);
+
+        $comments = $post->comments()->whereIsActive(1)->get();
+
+        return view('post',['post'=>$post,'comments'=>$comments]);
+
+
     }
 }
